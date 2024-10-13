@@ -1,0 +1,1 @@
+/usr/bin/cc  -Werror=maybe-uninitialized CMakeFiles/ChildProcess_exe.dir/ChildProcess.c.o -o ChildProcess_exe 
