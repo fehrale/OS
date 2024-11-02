@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <pthread.h>
 #include "include/parallelMergeSort.h"
 
@@ -9,12 +10,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    srand(time(NULL));
+
     int array_size = atoi(argv[1]);
     int max_threads = atoi(argv[2]);
 
     int *array = malloc(array_size * sizeof(int));
 
-    // Заполнение массива случайными числами
     for (int i = 0; i < array_size; i++) {
         array[i] = rand() % 1000;
     }
