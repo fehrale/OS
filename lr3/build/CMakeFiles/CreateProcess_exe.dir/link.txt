@@ -1,0 +1,1 @@
+/usr/bin/cc  -Werror=maybe-uninitialized CMakeFiles/CreateProcess_exe.dir/CreateProcess.c.o -o CreateProcess_exe 
