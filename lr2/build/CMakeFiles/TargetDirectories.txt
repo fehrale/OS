@@ -1,0 +1,4 @@
+/workspaces/OS/lr2/build/CMakeFiles/lr2_lib.dir
+/workspaces/OS/lr2/build/CMakeFiles/lr2_exe.dir
+/workspaces/OS/lr2/build/CMakeFiles/edit_cache.dir
+/workspaces/OS/lr2/build/CMakeFiles/rebuild_cache.dir

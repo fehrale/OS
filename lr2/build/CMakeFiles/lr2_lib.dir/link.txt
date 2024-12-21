@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblr2_lib.a CMakeFiles/lr2_lib.dir/src/parallelMergeSort.c.o
+/usr/bin/ranlib liblr2_lib.a

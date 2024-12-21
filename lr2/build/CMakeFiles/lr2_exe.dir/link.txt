@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/lr2_exe.dir/main.c.o -o lr2_exe  liblr2_lib.a 

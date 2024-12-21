@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+
+int main() {
+    int pipe_out[2];
+    
+    if (pipe(pipe_out) == -1) {
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+
+    char filename[256];
+    printf("Введите имя файла: ");
+    scanf("%s", filename);
+
+    char filepath[512];
+    sprintf(filepath, "../%s.txt", filename);
+
+    int file_fd = open(filepath, O_RDONLY);
+    if (file_fd == -1) {
+        perror("Ошибка открытия файла");
+        exit(EXIT_FAILURE);
+    }
+
+    pid_t cpid = fork();
+    if (cpid == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+
+    if (cpid == 0) {
+        dup2(file_fd, STDIN_FILENO);
+        close(file_fd);
+
+        dup2(pipe_out[1], STDOUT_FILENO);
+        close(pipe_out[0]);
+        close(pipe_out[1]);
+
+        execlp("./ChildProcess_exe", "ChildProcess_exe", NULL);
+        perror("execlp");
+        exit(EXIT_FAILURE);
+    } else {
+        close(file_fd);
+        close(pipe_out[1]);
+
+        char buffer[256];
+        ssize_t nbytes;
+        while ((nbytes = read(pipe_out[0], buffer, sizeof(buffer) - 1)) > 0) {
+            buffer[nbytes] = '\0';
+            printf("%s", buffer);
+        }
+
+        close(pipe_out[0]);
+        wait(NULL); 
+        return 0;
+    }
+}
