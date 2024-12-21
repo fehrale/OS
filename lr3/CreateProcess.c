@@ -1,46 +1,44 @@
 #include <stdio.h>
-#include <stdlib.h> //функции общего назначения (exit, ftruncate)
-#include <unistd.h> //функции POSIX API (close, fork, usleep
+#include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
-#include <sys/wait.h> //управление процессами (например, wait
-#include <fcntl.h> //управление файлами (open)
-#include <sys/mman.h> // отображение файлов в память
+#include <sys/wait.h>
+#include <fcntl.h> 
+#include <sys/mman.h> 
 
-#define SHARED_FILE "/tmp/mmapfile" //путь к файлу, который будет использоваться для отображения в память
-#define BUFFER_SIZE 256 //размер отображаемой памяти (256 байт).
+#define SHARED_FILE "/tmp/mmapfile"
+#define BUFFER_SIZE 256
 
 int main() {
-    // Создаем отображаемый файл
-    int fd = open(SHARED_FILE, O_CREAT | O_RDWR, 0666); //open: открываем (или создаем) файл SHARED_FILE с флагами O_CREAT (создать, если не существует) и O_RDWR (чтение/запись). Права доступа — 0666 (чтение и запись для всех)
+    int fd = open(SHARED_FILE, O_CREAT | O_RDWR, 0666);
     if (fd == -1) {
         perror("Ошибка при создании файла");
         exit(EXIT_FAILURE);
     }
-    ftruncate(fd, BUFFER_SIZE); //изменяем размер файла до BUFFER_SIZE
+    ftruncate(fd, BUFFER_SIZE);
 
-    // Отображаем файл в память
-    char *shared_memory = mmap(NULL, BUFFER_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0); //mmap: отображает файл в память, NULL: система сама выберет адрес памяти, BUFFER_SIZE: размер отображения, PROT_READ | PROT_WRITE: права на чтение и запись, MAP_SHARED: изменения памяти видны другим процессам
+    char *shared_memory = mmap(NULL, BUFFER_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (shared_memory == MAP_FAILED) {
         perror("Ошибка отображения файла в память");
         exit(EXIT_FAILURE);
     }
-    close(fd); //Закрываем файловый дескриптор fd
+    close(fd);
 
-    char filename[256]; //Создаем строку filename для хранения имени файла.
+    char filename[256];
     printf("Введите имя файла: ");
     scanf("%s", filename);
 
-    char filepath[512]; //Объявляем строку filepath для хранения полного пути к файлу.
+    char filepath[512];
     sprintf(filepath, "../%s.txt", filename);
 
-    int file_fd = open(filepath, O_RDONLY); //открываем файл по пути filepath с флагом O_RDONLY (только чтение)
+    int file_fd = open(filepath, O_RDONLY);
     if (file_fd == -1) {
         perror("Ошибка открытия файла");
         munmap(shared_memory, BUFFER_SIZE);
         exit(EXIT_FAILURE);
     }
 
-    pid_t cpid = fork(); //fork: создает дочерний процесс. Возвращает 0 в дочернем процессе, а в родительском — PID дочернего
+    pid_t cpid = fork();
     if (cpid == -1) {
         perror("Ошибка при fork");
         close(file_fd);
@@ -49,36 +47,32 @@ int main() {
     }
 
     if (cpid == 0) {
-        // Дочерний процесс
-        dup2(file_fd, STDIN_FILENO); //перенаправляем файловый дескриптор file_fd на стандартный ввод (STDIN_FILENO)
-        close(file_fd); //Закрываем file_fd
+        dup2(file_fd, STDIN_FILENO);
+        close(file_fd);
 
-        execlp("./ChildProcess_exe", "ChildProcess_exe", NULL); //запускаем программу ChildProcess_exe
+        execlp("./ChildProcess_exe", "ChildProcess_exe", NULL);
         perror("Ошибка при запуске дочернего процесса");
         exit(EXIT_FAILURE);
     } else {
-        // Родительский процесс
         close(file_fd);
 
         while (1) {
-            // Чтение результатов из отображаемой памяти
             if (strncmp(shared_memory, "done", 4) == 0) {
                 printf("Все данные обработаны. Завершение работы.\n");
                 break;
             } else if (strncmp(shared_memory, "exit", 4) == 0) {
-                printf("%s", shared_memory + 5); // Пропускаем "exit " и выводим сообщение об ошибке
+                printf("%s", shared_memory + 5);
                 break;
             } else if (strlen(shared_memory) > 0) {
-                printf("%s", shared_memory); //Если память не пуста, выводим содержимое
-                memset(shared_memory, 0, BUFFER_SIZE);  // Очистка памяти
+                printf("%s", shared_memory);
+                memset(shared_memory, 0, BUFFER_SIZE);
             }
-            usleep(100000);  //небольшая пауза для снижения нагрузки на процессор.
+            usleep(100000);
         }
 
-        // Ожидание завершения дочернего процесса
         wait(NULL);
-        munmap(shared_memory, BUFFER_SIZE); //освобождаем отображение памяти
-        unlink(SHARED_FILE); //удаляем файл SHARED_FILE
+        munmap(shared_memory, BUFFER_SIZE);
+        unlink(SHARED_FILE);
         return 0;
     }
 }
