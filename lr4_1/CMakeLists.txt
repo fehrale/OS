@@ -9,7 +9,7 @@ add_library(math_lib2 SHARED math_lib2.c)
 
 # Build static linking executable
 add_executable(main_static main_static.c)
-target_link_libraries(main_static math_lib1 m)  # Добавлен флаг "m" для математической библиотеки
+target_link_libraries(main_static math_lib1 m)
 
 # Build dynamic linking executable
 add_executable(main_dynamic main_dynamic.c)

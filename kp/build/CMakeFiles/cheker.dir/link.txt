@@ -1,0 +1,1 @@
+/usr/local/bin/c++ CMakeFiles/cheker.dir/src/cheker.cpp.o CMakeFiles/cheker.dir/src/error.cpp.o CMakeFiles/cheker.dir/src/timer_job.cpp.o -o cheker  libinih.a 

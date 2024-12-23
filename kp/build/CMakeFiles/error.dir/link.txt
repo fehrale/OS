@@ -1,0 +1,1 @@
+/usr/local/bin/c++  -pedantic -Wall CMakeFiles/error.dir/src/error.cpp.o -o error 

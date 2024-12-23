@@ -1,7 +1,6 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "contracts.h"
 
 void* handle = NULL;
 float (*E_func)(int);
@@ -50,8 +49,8 @@ void process_commands(const char* lib1, const char* lib2) {
             printf("\n");
         } else if (command == 3) {
             printf("Exiting program.\n");
-            dlclose(handle); // Close the library before exiting
-            exit(0); // Exit the program
+            dlclose(handle);
+            exit(0);
         }
     }
 

@@ -31,7 +31,7 @@ void process_commands() {
             printf("\n");
         } else if (command == 3) {
             printf("Exiting program.\n");
-            exit(0); // Exit the program
+            exit(0);
         }
     }
 }

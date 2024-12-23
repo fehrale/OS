@@ -1,0 +1,4 @@
+/workspaces/OS/kp/build/CMakeFiles/inih.dir
+/workspaces/OS/kp/build/CMakeFiles/cheker.dir
+/workspaces/OS/kp/build/CMakeFiles/edit_cache.dir
+/workspaces/OS/kp/build/CMakeFiles/rebuild_cache.dir
