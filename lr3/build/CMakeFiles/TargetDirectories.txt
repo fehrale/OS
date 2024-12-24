@@ -1,4 +1,0 @@
-/workspaces/OS/lr3/build/CMakeFiles/CreateProcess_exe.dir
-/workspaces/OS/lr3/build/CMakeFiles/ChildProcess_exe.dir
-/workspaces/OS/lr3/build/CMakeFiles/edit_cache.dir
-/workspaces/OS/lr3/build/CMakeFiles/rebuild_cache.dir
