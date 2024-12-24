@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/main_dynamic.dir/main_dynamic.c.o -o main_dynamic  -ldl -lm 

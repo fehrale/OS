@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -shared -Wl,-soname,libmath_lib2.so -o libmath_lib2.so CMakeFiles/math_lib2.dir/math_lib2.c.o 
